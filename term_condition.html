@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en-US" class="no-js">
+
+<head>
+    <link rel="icon" href="https://admin.worldstopstuttering.org/assets/images/l" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Lea.Training | About Us" />
+    <title>Lea.Training | About Us</title>
+    <style>
+        .text-header {
+            text-align: center;
+            font-weight: bolder
+        }
+
+        .content {
+            /* line-height: 30px; */
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+        }
+
+        #loader {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            /* background-color: rgba(255, 255, 255, 0.7); */
+            /* padding: 20px; */
+            /* border-radius: 5px; */
+            /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); */
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="container-fluid">
+    <section class="text-header">
+
+        <!-- <h1>Privacy Policy</h1> -->
+
+    </section>
+    <div id="loader">Loading...</div>
+    </br></br>
+    <div id="contentData" class="d-none content"></div>
+</body>
+
+<script>
+    const headers = new Headers();
+    headers.append("api-key", "rTlaypeG5Rl84JZmI8iRIw==");
+    headers.append("accept-language", "en");
+    headers.append("Content-Type", "text/plain");
+    headers.append("type", "admin");
+
+    // const requestData = "YCJRisc5CqLydSOiYKvg3A=="
+    const EncData = ""
+
+    document.getElementById("loader").style.display = "block";
+    fetch("http://13.126.162.64:8015/lea-training/v1/admin/cms/cms-list", {
+        method: "POST",
+        headers: headers,
+        // body: requestData
+    })
+        .then(response => response.text())
+        .then(res => {
+            console.log(res, "res data");
+
+            fetch("http://13.126.162.64:8015/lea-training/v1/admin/auth/decryption_demo", {
+                method: "POST",
+                headers: headers,
+                body: res
+            }).then(response => response.json())
+                .then(json => {
+                    console.log(json, "dec res")
+                    document.getElementById("loader").style.display = "none";
+
+                    // Find the content where tag_name is "About Us"
+                    const aboutUsContent = json.data.find(item => item.tag_name === "Terms & Condition");
+
+                    if (aboutUsContent) {
+                        // Display the content if found
+                        document.getElementById("contentData").innerHTML = aboutUsContent.content;
+                        document.getElementById("contentData").classList.remove("d-none");
+                    } else {
+                        // Handle case where "About Us" tag is not found
+                        document.getElementById("contentData").innerHTML = "<p>No content available for 'About Us'</p>";
+                    }
+                });
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+</script>
+
+</html>

@@ -1,0 +1,37 @@
+const message = {
+    //--------------------common message----------------------------//
+    "header_key_value_incorrect": "एपीआई की अनधिकृत पहुंच, एपीआई कुंजी के लिए अमान्य मूल्य",
+    "header_authorization_token_error": "एपीआई की अनधिकृत पहुंच, अमान्य प्राधिकरण टोकन कृपया अपने अनुरोध की जांच करें",
+    "internal_server_error":"आंतरिक सर्वर त्रुटि",
+    "required": ":attr स्थान भरा जाना है",
+    "email": ":attr कृपया वैध दर्ज करें",
+    "alpha": ":attr में केवल अक्षर होने चाहिए",
+    "numeric": ":attr संख्या होनी चाहिए",
+    "required_if": ":other :value होने पर :attr फ़ील्ड आवश्यक है",
+    "min": ":attr न्यूनतम :min वर्णों का होना चाहिए",
+    "in":"चयनित :attr अमान्य है।",
+    "digits":"मोबाइल नंबर :digits अंकों का होना चाहिए.",
+    "rest_keywords_required_message": "कृपया दर्ज करें :attr",
+    "rest_keyword_somthing_went_wrong": "कुछ गलत हो गया है। कृपया बाद में दोबारा प्रयास करें",
+    "rest_keyword_success": "सफलता",
+    "rest_keyword_no_data": "कोई डेटा नहीं मिला",
+    "rest_keyword_data_success": "डेटा मिला",
+    //-------------------------Auth Modules-------------------//
+    "rest_keywords_unique_email_error": "यह ईमेल पहले से ही उपयोग किया जा रहा है",
+    "rest_keywords_unique_email_exist_error": "यह ईमेल मौजूद नहीं है",
+    "rest_keywords_unique_user_exist_error": "यह उपयोगकर्ता मौजूद नहीं है",
+    "rest_keywords_unique_mobile_error": "यह मोबाइल पहले से ही इस्तेमाल किया जा रहा है",
+    "rest_keyword_signup_success": "सफलतापूर्वक साइनअप किया गया",
+    "invalid_credential_error": "अमान्य ईमेल और पासवर्ड",
+    "rest_keyword_login_success": "सफलतापूर्वक लॉगिन किया",
+    "rest_keyword_logout_success": "लॉगआउट सफलतापूर्वक किया गया",
+    "rest_keyword_incomplet_signUp_error": "साइनअप अधूरा है",
+    "rest_keyword_otp_verification_error": "नंबर सत्यापित नहीं है",
+    "rest_keyword_profile_update_success": "आपकी प्रोफ़ाइल अपडेट हो गई है",
+    "rest_keyword_email_otp_success": "ओटीपी आपके ईमेल {email} में सफलतापूर्वक भेज दिया गया है",
+    "rest_keyword_email_otp_verify_success": "ओटीपी सफलतापूर्वक सत्यापित किया गया है",
+    "rest_keyword_email_otp_verify_error": "अमान्य ईमेल और ओटीपी",
+    "rest_keyword_email_forget_password_link_success": "रीसेट पासवर्ड लिंक आपके ईमेल {email} में सफलतापूर्वक भेजा गया है",
+}
+
+module.exports = message;

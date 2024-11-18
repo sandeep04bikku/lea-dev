@@ -1,0 +1,1608 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+	<link href="https://unpkg.com/vuetify@1.0.17/dist/vuetify.min.css" type="text/css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" rel="stylesheet">
+	<link rel="shortcut icon" href="<%= GLOBALS.BASE_URL_WITHOUT_API + GLOBALS.LOGO%>">
+	<title>
+		<%= GLOBALS.APP_NAME %> API LIST
+	</title>
+	<style type="text/css">
+		.medium-text {
+			font-size: 18px;
+			color: white;
+		}
+
+		.js div#preloader {
+			position: fixed;
+			left: 0;
+			top: 0;
+			z-index: 999;
+			width: 100%;
+			height: 100%;
+			overflow: visible;
+			background: #fff url('<%= GLOBALS.BASE_URL_WITHOUT_API %>api/public/logo/ripple.gif') no-repeat center center;
+		}
+	</style>
+</head>
+
+<body class="js">
+	<div id="preloader"></div>
+	<div id="app">
+		<v-app id="inspire">
+			<v-layout justify column>
+				<v-flex style="margin:10px auto 10px auto; padding:0px; text-align:center;" center right sm2 xs2 md2 lg2
+					xl2>
+					<img src='<%= GLOBALS.BASE_URL_WITHOUT_PORT + GLOBALS.LOGO %>' width="120px"><br>
+					<strong style="font-size:24px;">
+						<%= GLOBALS.APP_NAME %> API LIST
+					</strong><br><br>
+					<v-alert :value="true" outline color="white" style="padding:5px;">
+						<v-chip color="black" text-color="white">
+							<v-avatar>
+								<v-icon>bookmark</v-icon>
+							</v-avatar><b>TOTAL {{messages.length}} APIs</b>
+						</v-chip>
+					</v-alert>
+					<v-alert :value="true" outline color="white" style="padding:5px;">
+						<v-chip color="black" text-color="white">
+							<v-avatar>
+								<v-icon>label_important</v-icon>
+							</v-avatar><b>If Device Token not get, pass 0 only</b>
+						</v-chip>
+						<v-chip color="black" text-color="white">
+							<v-avatar>
+								<v-icon>label_important</v-icon>
+							</v-avatar><b>Upload images on S3 bucket</b>
+						</v-chip>
+					</v-alert>
+				</v-flex>
+				<v-flex style="margin:0px auto; padding:0px;" center right sm2 xs2 md2 lg2 xl2>
+
+					<div id="main1" style="margin:0px auto; position:sticky;">
+						<table border="0" cellpadding="10" cellspacing="10" width="100%"
+							style="background: linear-gradient(150deg, #121213 50%, #1a1c27) !important;color: #fff;font-weight: bold;">
+							<tr>
+								<td><b>Server URL </b></td>
+								<td><img src='<%= GLOBALS.BASE_URL_WITHOUT_PORT+ GLOBALS.ARROW_IMAGE %>'
+										width="40px">&nbsp;&nbsp;<b>
+										<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/
+									</b></td>
+							</tr>
+							<tr>
+								<td><b>Header Parameters </b></td>
+								<td><img src='<%= GLOBALS.BASE_URL_WITHOUT_PORT+ GLOBALS.ARROW_IMAGE %>'
+										width="40px">&nbsp;&nbsp;<b>API-KEY, TOKEN, accept-language</b></td>
+							</tr>
+							<tr>
+								<td><b>API-KEY </b></td>
+								<td><img src='<%= GLOBALS.BASE_URL_WITHOUT_PORT+ GLOBALS.ARROW_IMAGE %>'
+										width="40px">&nbsp;&nbsp;<b>
+										<%= GLOBALS.API_KEY %>
+									</b></td>
+							</tr>
+							<tr>
+								<td><b>KEY </b></td>
+								<td><img src='<%= GLOBALS.BASE_URL_WITHOUT_PORT+ GLOBALS.ARROW_IMAGE %>'
+										width="40px">&nbsp;&nbsp;<b>
+										<%= GLOBALS.KEY %>
+									</b></td>
+							</tr>
+							<tr>
+								<td><b>IV </b></td>
+								<td><img src='<%= GLOBALS.BASE_URL_WITHOUT_PORT+ GLOBALS.ARROW_IMAGE %>'
+										width="40px">&nbsp;&nbsp;<b>
+										<%= GLOBALS.IV %>
+									</b></td>
+							</tr>
+						</table>
+						<br> <br>
+					</div>
+				</v-flex>
+				<v-flex style="margin:0px auto;" center right sm2 xs2 md2 lg2 xl2>
+					<a target="_blank" href='/v1/api_document/user_list'>
+						<v-btn color="blue-grey" class="white--text">
+							USER LIST <v-icon right dark>people</v-icon>
+						</v-btn>
+					</a>
+					<a target="_blank" href='/v1/api_document/code'>
+						<v-btn color="blue-grey" class="white--text">
+							CODE REFERENCE <v-icon right dark>code</v-icon>
+						</v-btn>
+					</a>
+					<a target="_blank"
+						href='http://localhost/live_project/lea_training_git/lia.training/api/enc_dec.php'>
+						<v-btn color="blue-grey" class="white--text">
+							ENCRYPTION URL <v-icon right dark>lock</v-icon>
+						</v-btn>
+					</a>
+				</v-flex>
+
+				<v-expansion-panel popout>
+					<v-expansion-panel-content v-for="(message, i) in messages" :key="i" hide-actions>
+						<v-layout slot="header" align-center row spacer>
+							<v-flex sm1 xs1 md1 lg1 xl1>
+								<v-avatar slot="activator" size="36px">
+									<v-icon :color="message.color">{{ message.icon }}</v-icon>
+								</v-avatar>
+							</v-flex>
+							<v-flex sm3 xs3 md3 lg3 xl3>
+								<strong v-html="message.title"></strong>
+								<v-chip v-if="message.meth" :color="`${message.color} lighten-4`" label small
+									class="ml-0">
+									{{ message.meth }}
+								</v-chip>
+							</v-flex>
+							<v-flex sm3 xs3 md3 lg3 xl3>
+								<strong v-html="message.name"></strong><br>
+								<span v-if="message.updated" style="color:orange">{{ message.updated }}</span>
+								<span v-if="message.new_added" style="color:green"><span
+										v-html="message.new_added"></span></span>
+							</v-flex>
+							<v-flex sm4 xs4 md4 lg4 xl4>
+								<v-flex v-if="message.link" class="grey--text" ellipsis hidden-sm-and-down>
+									{{ message.link }}
+								</v-flex>
+								<v-flex class="grey--text" ellipsis hidden-sm-and-down>
+									<span v-if="message.imp" style="color:darkred">SHOW IMPORTANT NOTE INSIDE</span>
+								</v-flex>
+							</v-flex>
+						</v-layout>
+						<v-card dark>
+							<v-container>
+								<v-layout v-if="message.new_tag === '0'">
+									<v-flex xs12 align-end flexbox>
+										<v-alert v-if="message.new_added" :value="true" outline color="white"
+											style="padding:5px;">
+											<v-chip color="green" text-color="white">
+												<v-avatar>
+													<v-icon>fiber_new</v-icon>
+												</v-avatar> NEW
+											</v-chip>
+											<span v-html="message.new_added"></span>
+										</v-alert>
+										<v-alert v-if="message.updated" :value="true" outline color="white"
+											style="padding:5px;">
+											<v-chip color="orange" text-color="white">
+												<v-avatar>
+													<v-icon>update</v-icon>
+												</v-avatar> UPDATED
+											</v-chip>
+											<span>{{ message.updated }}</span>
+										</v-alert>
+										<v-alert :value="true" outline color="white" style="padding:5px;">
+											<v-chip color="teal" text-color="white">
+												<v-avatar>
+													<v-icon>check_circle</v-icon>
+												</v-avatar> MANDATORY
+											</v-chip>
+											{{message.mandatory}}
+										</v-alert>
+										<v-alert :value="true" outline color="white" style="padding:5px;">
+											<v-chip outline color="#F0F4C3">
+												<v-avatar>
+													<v-icon>check_circle</v-icon>
+												</v-avatar>OPTIONAL
+											</v-chip>
+											<span>{{ message.optional }}
+										</v-alert>
+										<v-alert v-if="message.link" :value="true" outline color="white"
+											style="padding:5px;">
+											<v-chip color="light-green darken-2" text-color="white">
+												<v-avatar>
+													<v-icon>link</v-icon>
+												</v-avatar> LINK
+											</v-chip>
+											<span>{{ message.link }}
+										</v-alert>
+										<v-alert v-if="message.imp" :value="true" outline color="white"
+											style="padding:5px;">
+											<v-chip color="red darken-2" text-color="white">
+												<v-avatar>
+													<v-icon>new_releases</v-icon>
+												</v-avatar> IMPORTANT
+											</v-chip>
+											<p v-html="message.imp"></p>
+										</v-alert>
+										<v-alert v-if="message.notes" :value="true" outline color="white"
+											style="padding:5px;">
+											<v-chip color="blue lighten-1" text-color="white">
+												<v-avatar>
+													<v-icon>bookmark</v-icon>
+												</v-avatar> NOTES
+											</v-chip>
+											<span>{{ message.notes }}
+										</v-alert>
+										<v-alert v-if="message.example" :value="true" outline color="white"
+											style="padding:5px;">
+											<v-chip color="red darken-2" text-color="white">
+												<v-avatar>
+													<v-icon>check_circle</v-icon>
+												</v-avatar> EXAMPLE
+											</v-chip>
+											<p v-html="message.example"></p>
+										</v-alert>
+										<v-layout style="margin-top:-4px">
+											<v-flex xs6 align-end flexbox>
+												<v-alert :value="true" outline color="yellow" icon="priority_high"
+													style="padding:5px;">
+													<span class="grey--text">HEADER : {{ message.is_header }}, PUSH : {{
+														message.is_push }}</span><br>
+													<span>HEADER : {{ message.header }}</span>
+												</v-alert>
+											</v-flex>
+											<v-flex xs6 align-end flexbox>
+												<v-alert style="margin-left:4px; padding:5px;" :value="true" outline
+													color="yellow" icon="priority_high">
+													STATUS : <span v-html="message.status"></span>
+												</v-alert>
+											</v-flex>
+										</v-layout>
+									</v-flex>
+								</v-layout>
+							</v-container>
+							<v-card-actions>
+							</v-card-actions>
+						</v-card>
+					</v-expansion-panel-content>
+				</v-expansion-panel>
+			</v-layout>
+		</v-app>
+	</div>
+	<div id="asd"></div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+	<script src="https://unpkg.com/vuetify@1.0.17/dist/vuetify.min.js"></script>
+	<script src="https://unpkg.com/babel-polyfill/dist/polyfill.min.js"></script>
+	<script>
+
+		jQuery(document).ready(function ($) {
+			$('#preloader').fadeOut('slow', function () { $(this).remove(); });
+		});
+
+		var base_url = "<%= GLOBALS.PORT_BASE_URL %>api/v1/";
+		var base_url_without_api = "<%= GLOBALS.BASE_URL_WITHOUT_API %>";
+		let i = 1;
+
+		new Vue({
+			el: '#app',
+			data: () => ({
+				messages: [
+					// {
+					// 	new_tag: '0',
+					// 	color: 'orange',
+					// 	icon: 'http',
+					// 	title: 'DIRECT LINK',
+					// 	name: 'ABOUT US',
+					// 	meth: 'Link',
+					// 	link: "<%= GLOBALS.BASE_URL_WITHOUT_PORT %>staticPage/aboutus.php",
+					// 	imp: "ABOUT US",
+					// },
+					// {
+					// 	new_tag: '0',
+					// 	color: 'orange',
+					// 	icon: 'http',
+					// 	title: 'DIRECT LINK',
+					// 	name: 'PRIVACY POLICY',
+					// 	meth: 'Link',
+					// 	link: "<%= GLOBALS.BASE_URL_WITHOUT_API %>home/policy_content/en",
+					// 	imp: "PRIVACY POLICY",
+					// },
+					// {
+					// 	new_tag: '0',
+					// 	color: 'orange',
+					// 	icon: 'http',
+					// 	title: 'DIRECT LINK',
+					// 	name: 'TERMS & CONDITION',
+					// 	meth: 'Link',
+					// 	link: "<%= GLOBALS.BASE_URL_WITHOUT_API %>home/condition_content/en",
+					// 	imp: "TERMS & CONDITION",
+					// },
+					// {
+					// 	new_tag: '0',
+					// 	color: 'orange',
+					// 	icon: 'http',
+					// 	title: 'DIRECT LINK',
+					// 	name: 'FAQ',
+					// 	meth: 'Link',
+					// 	link: "<%= GLOBALS.BASE_URL_WITHOUT_API %>home/faqview/en",
+					// 	imp: "FAQ",
+					// },
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' :Encryption',
+						name: 'decryption',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/admin/auth/encryption_demo",
+						mandatory: "",
+						optional: "",
+						is_header: "No",
+						is_push: "NO",
+						header: "",
+						notes: "This api is used to derypt",
+						example: '{}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Decryption',
+						name: 'decryption',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/admin/auth/decryption_demo",
+						mandatory: "",
+						optional: "",
+						is_header: "No",
+						is_push: "NO",
+						header: "",
+						notes: "This api is used to derypt",
+						example: '{}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+					},
+
+					{
+						new_tag: '1',
+						color: 'blue',
+						title: 'Admin Auth API',
+						icon: '',
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'Admin Login',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/admin/auth/login-admin",
+						mandatory: "email,password,login_type,device_name,device_token,device_token,device_type,os_version,app_version",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type",
+						notes: "This api is used to login for admins",
+						example: '{"email": "sandeep04sahu92@gmail.com","password":"Admin@123","login_type":"S","device_name":"Oppo N3","device_token":"abc123","device_type":"W","os_version":"13.1","app_version":"2.0"}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'Admin Logout',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/admin/auth/logout-admin",
+						mandatory: "",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to logout for admins",
+						example: '{}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'Get Admin',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/admin/auth/get-admin",
+						mandatory: "",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to get admin details for admins",
+						example: '{}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'Admin Forget Password',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/admin/auth/forget-password",
+						mandatory: "email",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type",
+						notes: "This api is used to forget password for admins",
+						example: '{"email":"Admin@test.com"}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'Admin Resend Otp',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/admin/auth/resend-otp",
+						mandatory: "email",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type",
+						notes: "This api is used to resend otp for admins",
+						example: '{"email":"Admin@test.com"}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'Admin Verify Otp',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/admin/auth/verify-otp",
+						mandatory: "email,otp",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type",
+						notes: "This api is used to resend otp for admins",
+						example: '{"email":"Admin@test.com","otp":"2345"}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'Admin Set Password',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/admin/auth/create-new-password",
+						mandatory: "id,new_password,confirm_password",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type",
+						notes: "This api is used to Set password for admins",
+						example: '{"id":1,"new_password":"Test@123","confirm_password":"Test@123"}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'Admin Change Password Password',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/admin/auth/change-password",
+						mandatory: "old_password,new_password,confirm_password",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to Set password for admins",
+						example: '{"old_password":"Admin@123","new_password":"Test@123","confirm_password":"Test@123"}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+					},
+
+					{
+						new_tag: '2',
+						color: 'orange',
+						title: 'Admin Trainee Modules API',
+						icon: '',
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Trainee/User',
+						name: 'Admin Add Trainee/User',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/admin/user/add-user",
+						mandatory: "corporate_profile_id,full_name,email,country_code,phone_number,password",
+						optional: "country_id,city_id,image,dob,government_certificate,security_question,security_answer,organization,experience",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to add single user data",
+						example: '{"corporate_profile_id":1,"full_name":"Ram Kunmar","email":"user7@test.com","country_code":"+91","phone_number":"9887775540","password":"Test@123",<br>"country_id":"","city_id":"","image":"","dob":"","government_certificate":"","security_question":"","security_answer":"","organization":"","experience":""}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Trainee/User',
+						name: 'Admin Add Bulk Trainee/User',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/admin/user/add-bulk-users",
+						mandatory: "corporate_profile_id,full_name,email,country_code,phone_number,password",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to add user data in bulk",
+						example: '{"users_data":[{"full_name":"Milan Gangal","email":"user8@test.com","country_code":"+91","phone_number":"9887775542","password":"Test@123"},<br>{"full_name":"Milan Gangal","email":"user7@test.com","country_code":"+91","phone_number":"9887775540","password":"Test@123"}],"corporate_profile_id":1}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Trainee/User',
+						name: 'Admin Delete Trainee/User',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/admin/user/delete-user",
+						mandatory: "id",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to delete user data",
+						example: '{"id":1}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Trainee/User',
+						name: 'Admin Change Status Trainee/User',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/admin/user/change-user-status",
+						mandatory: "id,is_active",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to change user status active/blocked",
+						example: '{"id":2,"is_active":false}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Trainee/User',
+						name: 'Admin Update Trainee/User',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/admin/user/update-user",
+						mandatory: "id,full_name,email,country_code,phone_number,password",
+						optional: "country_id,city_id,image,dob,government_certificate,security_question,security_answer,organization,experience",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to update user data",
+						example: '{"id":3,"email":"user9@test.com","country_code":"+91","phone_number":"9785764767","full_name":"Rohan Roy"}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Trainee/User',
+						name: 'Admin Get User list',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/admin/user/user-list",
+						mandatory: "",
+						optional: "id,filter,search,sort,page,limit",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to get user list",
+						example: '{"id":"","filter":"","search":"","sort":"id:asc","page":3,"limit":5}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "",
+					},
+					{
+						new_tag: '1',
+						color: 'blue',
+						title: 'upload image s3 client',
+						icon: '',
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : S3 Client',
+						name: 'Upload Image',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/s3-client/upload-image",
+						mandatory: "bucket_folder_name,file_type",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used for upload image and get url to upload image in aws s3",
+						example: '{ "bucket_folder_name":"admin", "file_type":"png" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '1',
+						color: 'blue',
+						title: 'User Auth API',
+						icon: '',
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'User signup',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/auth/signup-user",
+						mandatory: "login_type,full_name,email,country_code,phone_number,device_name,device_type,device_token,os_version,app_version,language_id",
+						optional: "email,password,social_id",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type",
+						notes: "This api is used for user signup",
+						example: '{ "language_id": 1, "login_type": "S", "full_name": "Rao Sharma", "email": "test@test.com", "country_code": "91", "phone_number": "9786758623", "password": "Test@123", "social_id": "abc123", "device_name": "Oppo N3", "device_token": "abc123", "device_type": "A", "os_version": "1.0", "app_version": "1.5" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'User Login',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/auth/login-user",
+						mandatory: "login_type,device_name,device_type,device_token,os_version,app_version",
+						optional: "password,social_id,email,country_code,phone_number",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type",
+						notes: "This api is used for user login",
+						example: '{ "login_type": "S", "email": "test@test.com", "country_code": "+91", "phone_number": "9786758669", "password": "Test@123", "social_id": "abc123", "device_name": "IPhone 15 pro", "device_token": "abc123", "device_type": "I", "os_version": "14.7", "app_version": "2.0" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'User Logout',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/auth/logout-user",
+						mandatory: "",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used for user logout",
+						example: '{}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'Get user details',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/auth/get-user",
+						mandatory: "",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to get user details",
+						example: '{}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'Forget Password',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/auth/forget-password",
+						mandatory: "",
+						optional: "email,country_code,phone_number",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type",
+						notes: "This api is used for forget password",
+						example: '{ "email":"test@test.com", "country_code":"+91", "phone_number":"9786758670" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'Resend Otp',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/auth/resend-otp",
+						mandatory: "",
+						optional: "email,country_code,phone_number",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type",
+						notes: "This api is used to resend otp",
+						example: '{ "email": "test@test.com", "country_code": "+91", "phone_number": "9786758612", "is_forget": false }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'Verify Otp',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/auth/verify-otp",
+						mandatory: "otp",
+						optional: "email,country_code,phone_number,is_forget",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type",
+						notes: "This api is used to verify otp",
+						example: '{ "email": "test@test.com", "country_code": "+91", "phone_number": "9786758612", "otp": "1234", "is_forget": false }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'Set New Password',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/auth/create-new-password",
+						mandatory: "id,new_password,confirm_password",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type",
+						notes: "This api is used to set new password",
+						example: '{ "id":1, "new_password":"Test@1234", "confirm_password":"Test@1234" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'Change Password',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/auth/change-password",
+						mandatory: "current_password,new_password,confirm_password",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to change password",
+						example: '{ "current_password":"Test@123", "new_password":"Test@1234", "confirm_password":"Test@1234" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'Complete Profile',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/auth/complete-profile",
+						mandatory: "",
+						optional: "image,dob,government_certificate,security_question,security_answer,organization,experience,country_id,city_id",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to complete profile",
+						example: '{ "image": "u1.png", "dob": "2000-09-17", "government_certificate": "gc.png", "security_question": "sdhjkdshfdj", "security_answer": "dndkldn", "organization": "kjldl;fdsk", "experience": "2","country_id":1,"city_id":1 }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'Update Profile',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/auth/update-user",
+						mandatory: "full_name,country_code,phone_number",
+						optional: ",email,image,dob,government_certificate,organization,experience,country_id,city_id",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to update profile",
+						example: '{ "full_name": "Rohi Roy", "email": "user98@test.com", "country_code": "91", "phone_number": "7845878793", "image": "u1.png", "dob": "2000-09-17", "country_id":2, "city_id": 4, "government_certificate": "gc.png", "organization": "kjldl;fdsk", "experience": "2" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'Chnage Language',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/auth/change-language",
+						mandatory: "language_id",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to change language",
+						example: '{ "language_id": 1 }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'Language List',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/auth/language-list",
+						mandatory: "",
+						optional: "page,limit,sort",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type",
+						notes: "This api is used for language list",
+						example: '{ "page": 1, "limit": 100, "sort": "id:desc"}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'Country List',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/auth/language-list",
+						mandatory: "",
+						optional: "page,limit,sort",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,token,api-key,type",
+						notes: "This api is used for country list",
+						example: '{ "page": 1, "limit": 100, "sort": "id:desc"}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'City List',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/auth/language-list",
+						mandatory: "country_id",
+						optional: "page,limit,sort",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,token,api-key,type",
+						notes: "This api is used for city list",
+						example: '{"page": 1, "limit": 100, "sort": "id:desc"}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'Delete user',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/auth/delete-user",
+						mandatory: "",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,token,api-key,type",
+						notes: "This api is used for deleting user",
+						example: '{}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Auth',
+						name: 'Add Contact Us',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/auth/add-contact-us",
+						mandatory: "first_name,last_name,email,subject,description",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,token,api-key,type",
+						notes: "This api is used for contact us",
+						example: '{ "first_name": "rahul", "last_name": "Sharma", "email": "rahul@test.com", "subject": "How to access course", "description": "jsdhfj smfhd kdjhf sdjfk mdshf dnkdlsf" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '1',
+						color: 'blue',
+						title: 'User Home API',
+						icon: '',
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Home',
+						name: 'Category List',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/home/category-list",
+						mandatory: "",
+						optional: "id,page,limit,sort",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to display list of category",
+						example: '{ "id": 1, "page": 1, "limit": 500, "sort": "id:desc" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Home',
+						name: 'Course List',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/home/course-list",
+						mandatory: "language",
+						optional: "id,search,page,limit,sort,category_id,min_price,max-price,min_review,max_review",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to display list of course",
+						example: '{"language":"English", "id": 1, "category_id":1, "search": "cyber", "page": 1, "limit": 10, "sort": "id:desc", "min_price": 100, "max_price": 1000, "min_review": 2, "max_review": 4 }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Home',
+						name: 'My Course',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/home/user-course-list",
+						mandatory: "",
+						optional: "id,page,limit,sort,is_completed,is_upcoming",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to display list of user purchage course",
+						example: '{ "course_id": 1, "page": 1, "limit": 1, "sort": "id:desc", "is_completed":false,"is_upcoming":false }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Home',
+						name: 'Lession List',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/home/lession-list",
+						mandatory: "course_id,language",
+						optional: "id,page,limit,sort",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to display list of Lession of particuler course",
+						example: '{ "id": 1, "page": 1, "limit": 100, "sort": "id:desc", "course_id":2, "language":"english" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Home',
+						name: 'Add/Remove Favorite Course',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/home/add-delete-favorite-course",
+						mandatory: "course_id",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to add/remove course in/from favorite list",
+						example: '{ "course_id":2 }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Home',
+						name: 'Favorite Course List',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/home/user-favorite-course-list",
+						mandatory: "",
+						optional: "page,limit,sort",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to display course favorite list",
+						example: '{"page": 1, "limit": 100, "sort": "id:desc"}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Home',
+						name: 'Add Course Review',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/home/add-course-review",
+						mandatory: "course_id,rating",
+						optional: "review",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to add review of course given by user",
+						example: '{ "course_id":6, "rating":3, "review":"dkch nsdjkf dnkfdjk dnkfhfkjsssssssssssssss" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Home',
+						name: 'Add Trainer Review',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/home/add-trainer-review",
+						mandatory: "trainer_id,rating",
+						optional: "review",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to add review of Trainer given by user",
+						example: '{ "trainer_id":4, "rating":3, "review":"dkch nsdjkf dnkfdjk dnkfhfkjsssssssssssssss" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Home',
+						name: 'Trainer Review List',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/home/trainer-review-list",
+						mandatory: "trainer_id",
+						optional: "page,limit,sort",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to display list of trainer review list",
+						example: '{ "trainer_id":2,"page": 1, "limit": 100, "sort": "id:desc" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Home',
+						name: 'Add User Lession Details',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/home/add-user-lession-details",
+						mandatory: "course_id,lession_id,start_time,pause_time",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to store user lession details",
+						example: '{ "course_id":1, "lession_id":1, "start_time":"00:00:00", "pause_time":"01:00:09" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Home',
+						name: 'Course Review List',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/home/course-review-list",
+						mandatory: "course_id",
+						optional: "page,limit,sort",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to display list of Course review list",
+						example: '{ "course_id":2,"page": 1, "limit": 100, "sort": "id:desc" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Home',
+						name: 'Recommended Course List',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/home/recommended-course-list",
+						mandatory: "language",
+						optional: "page,limit,sort",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to display list of Recommended Course list",
+						example: '{ "language":"english","page": 1, "limit": 100, "sort": "id:desc" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Home',
+						name: 'Add User Search Course Data',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/home/add-search-course",
+						mandatory: "course_id",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to add user search course data",
+						example: '{ "course_id":1}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Home',
+						name: 'Add Complaint Feedback',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/home/add-complaint-feedback",
+						mandatory: "full_name,country_code,phone_number,description,image",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to add complaint feedback",
+						example: '{ "full_name": "Rohit Shama", "country_code": "91", "phone_number": "7777777777", "description": "dsfsdj sfhsedjkf nesdjkfh nsdjkfhj d nfkjdshf", "image": "c.png" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '1',
+						color: 'blue',
+						title: 'User Test API',
+						icon: '',
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Test',
+						name: 'User Test Count',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/test/user-test-count",
+						mandatory: "",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to display user test count",
+						example: '{ }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Test',
+						name: 'Get Test data',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/test/random-test-list",
+						mandatory: "course_id,language",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to display test data with questions",
+						example: '{ "course_id":2, "language":"English" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Test',
+						name: 'User Attempt Test',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/test/user-attempt-test",
+						mandatory: "course_id,test_id,user_test_data",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used when submitting test with test data",
+						example: '{ "test_id": 20, "course_id": 2, "user_test_data": [ { "question_id": 35, "option_id": 28 }, { "question_id": 36, "option_id": 32 }, { "question_id": 37, "option_id": 35 }, { "question_id": 38, "option_id": 39 }, { "question_id": 38, "option_id": 0 } ] }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header.If user not selected any option pass option_id:0",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Test',
+						name: 'Attempt Test Details',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/test/attempt-test-data",
+						mandatory: "test_id",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to get test details after submitting by user",
+						example: '{ "test_id": 35}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header.If user not selected any option pass option_id:0",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Test',
+						name: 'Attempt Test Details',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/test/download-certificate",
+						mandatory: "course_id",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to download certificate",
+						example: '{ "course_id": 35}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header.If user not selected any option pass option_id:0",
+					},
+					{
+						new_tag: '1',
+						color: 'blue',
+						title: 'Community Forum & Blog',
+						icon: '',
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Community Forum',
+						name: 'add community forum query',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/community-forum/add-coomunity-forum",
+						mandatory: "query",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to add query in community forum",
+						example: '{ "query":"jdfhsfjkdshfgjdks msdhfjksdhfg ndsjkfghdskl cdm,fjhdsklif" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Community Forum',
+						name: 'add community forum answer',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/community-forum/add-coomunity-forum-answer",
+						mandatory: "community_forum_id,answer",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to add answer for particular query in community forum",
+						example: '{ "community_forum_id": 1, "answer": "jdfhsfjkdshfgjdks msdhfjksdhfg ndsjkfghdskl cdm,fjhdsklif" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Community Forum',
+						name: 'community forum list',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/community-forum/community-forum-list",
+						mandatory: "",
+						optional: "page,limit,sort",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used for community forum list",
+						example: '{ "page": 1, "limit": 90,sort:"id:desc" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Community Forum',
+						name: 'community forum answer list',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/community-forum/community-forum-answer-list",
+						mandatory: "community_forum_id",
+						optional: "page,limit,sort",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used for community forum answer list",
+						example: '{ community_forum_id:1,"page": 1, "limit": 90,sort:"is_correct:desc,id:desc" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Community Forum',
+						name: 'Blog list',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/community-forum/blog-list",
+						mandatory: "",
+						optional: "id,page,limit,sort",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used for blog list",
+						example: '{id:1,"page": 1, "limit": 90,sort:"id:desc" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Community Forum',
+						name: 'CMS List',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/community-forum/cms-list",
+						mandatory: "",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used for cms list (about us privacy policy term & ondition)",
+						example: '{}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Community Forum',
+						name: 'FAQ List',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/community-forum/faq-list",
+						mandatory: "",
+						optional: "page,limit,sort",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used for faq list",
+						example: '{"page": 1, "limit": 90,sort:"id:desc" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '1',
+						color: 'blue',
+						title: 'Animated Video',
+						icon: '',
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Animated Video',
+						name: 'Animated Video list',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/animated-video/animated-video-list",
+						mandatory: "",
+						optional: "id,page,limit,sort",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to get animated video list",
+						example: '{ "id":1,"page":1,"limit":10,sort:"id:desc"}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '1',
+						color: 'blue',
+						title: 'Cart/Payment',
+						icon: '',
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Cart/Payment',
+						name: 'Add TO Cart',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/cart-payment/add-to-cart",
+						mandatory: "course_id",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used to add course into cart",
+						example: '{ "course_id":4 }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Cart/Payment',
+						name: 'My Cart List',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/cart-payment/my-cart-list",
+						mandatory: "",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used for cart list",
+						example: '{}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Cart/Payment',
+						name: 'Apply Discount Code',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/cart-payment/apply-discount-code",
+						mandatory: "cart_id",
+						optional: "code",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used for apply/remove discount code",
+						example: '{"cart_id":1,"code":"code201"}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Cart/Payment',
+						name: 'Discount Code List',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/cart-payment/discount-code-list",
+						mandatory: "",
+						optional: "page,limit,sort",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used for discount code list",
+						example: '{"page":1,"sort":"id:desc","limit":100}',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Cart/Payment',
+						name: 'Delete Cart Course',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/cart-payment/delete-cart-course",
+						mandatory: "cart_id,course_id",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used for delete cart course",
+						example: '{ "cart_id":3, "course_id":4 }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Cart/Payment',
+						name: 'create order in razorpay',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/cart-payment/create-order",
+						mandatory: "total_amount,currency,receipt",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used for delete cart course",
+						example: '{ "total_amount": 100, "currency":"INR", "receipt": "recp101" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Cart/Payment',
+						name: 'Place order and verify payment',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/cart-payment/place-order",
+						mandatory: "razorpay_order_id,razorpay_payment_id,razorpay_signature,currency,amount,payment_method,cart_details",
+						optional: "discount_code,discount,upi_transaction_id,bank_transaction_id",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used for delete cart course",
+						example: '{ "razorpay_order_id": "dsnjdsbfdsjbfvdj", "razorpay_payment_id": "djhgfhjdgf", "razorpay_signature": "sjbjdsfgjbcs", "currency": "INR", "amount": 10000, "discount_code": "", "discount": "", "tax": 0.00, "payment_method": "card", "cart_details": [ { "course_id": 1 }, { "course_id": 2 } ], "upi_id":"", "upi_transaction_id":"", "bank_transaction_id":"" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'person',
+						title: i++ + ' : Cart/Payment',
+						name: 'User card list',
+						meth: 'POST',
+						link: "<%= GLOBALS.PORT_BASE_URL %>lea-training/v1/user/cart-payment/user-card-list",
+						mandatory: "",
+						optional: "page,limit,sort",
+						is_header: "YES",
+						is_push: "NO",
+						header: "Accept-Language,api-key,type,token",
+						notes: "This api is used for user card list",
+						example: '{ "page": 1, "limit": 20, "sort": "id:desc" }',
+						status: "<br>1. HTTP_OK[<%= GLOBALS.SUCCESS %>] - code : <%= GLOBALS.SUCCESS %> <br>2. HTTP_ERROR[<%= GLOBALS.OPRETION_FAILD %>] - code : <%= GLOBALS.OPRETION_FAILD %> <br>3. HTTP_UNAUTHRISED ACCESS[<%= GLOBALS.UNAUTHORIZED_ACCESS %>] - code : <%= GLOBALS.UNAUTHORIZED_ACCESS %> <br>4. HTTP_NO_DATA_FOUND[<%= GLOBALS.NO_DATA_FOUND %>] - code : <%= GLOBALS.NO_DATA_FOUND %> <br>5. HTTP_INTERNAL_ERROR[<%= GLOBALS.INTERNAL_ERROR %>] - code : <%= GLOBALS.INTERNAL_ERROR %>",
+						imp: "type should be 'user' in Header",
+					},
+				]
+			})
+		})	
+	</script>
+</body>
+
+</html>
